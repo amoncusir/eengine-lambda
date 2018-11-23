@@ -1,0 +1,76 @@
+
+buildscript {
+
+    ext {
+        kotlin_version = '1.3.10'
+    }
+
+    repositories {
+        mavenCentral()
+        jcenter()
+
+        maven { url "https://plugins.gradle.org/m2/" }
+    }
+
+    dependencies {
+        // Kotlin Plugin
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlin_version}")
+
+        // Lint plugin
+        classpath "io.gitlab.arturbosch.detekt:detekt-gradle-plugin:1.0.0-RC11"
+
+        // MapStruct
+        classpath "net.ltgt.gradle:gradle-apt-plugin:0.19"
+    }
+}
+
+group = "info.digitalpoet.eengine"
+version = "0.0.1"
+
+configure(subprojects) {
+    apply plugin: 'java'
+    apply plugin: 'kotlin'
+
+    configurations.kapt.extendsFrom(configurations.compileOnly)
+
+    /**
+     * Intensive clean task (delete generated files) NOTE: When run this task, the first time that old_build project
+     * not work. Need run 2 times or old_build first run springBoot task
+     */
+    clean << {
+        delete "./out"
+    }
+}
+
+subprojects {
+    apply plugin: "io.gitlab.arturbosch.detekt"
+
+    group = rootProject.group
+    version = rootProject.version
+
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+
+    repositories {
+        jcenter()
+        mavenCentral()
+    }
+
+    dependencies {
+        
+        implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
+        implementation 'org.jetbrains.kotlin:kotlin-reflect'
+        
+        implementation("io.projectreactor:reactor-core:3.2.3.RELEASE")
+    }
+
+    detekt {
+        parallel = true
+        config = files("${project.rootProject.projectDir.absolutePath}/detekt-config.yml")
+    }
+}
+
+task deepClean(type: Delete) {
+    delete "${rootProject.projectDir}/.gradle", "${rootProject.projectDir}/build"
+    subprojects.each { delete "${it.projectDir}/old_build", "${it.projectDir}/build", "${it.projectDir}/out" }
+}
