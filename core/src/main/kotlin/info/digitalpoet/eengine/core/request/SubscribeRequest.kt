@@ -12,9 +12,7 @@ interface SubscribeRequest: AuthenticatedRequest
 
     val type: String
 
-    val method: String
-
-    val metadata: Map<String, String>
+    val protocol: String
 
     //~ Properties =====================================================================================================
 

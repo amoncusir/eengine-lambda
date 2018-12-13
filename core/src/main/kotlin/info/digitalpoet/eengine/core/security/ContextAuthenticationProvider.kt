@@ -1,25 +1,22 @@
-package info.digitalpoet.eengine.core.event
+package info.digitalpoet.eengine.core.security
 
 import info.digitalpoet.eengine.core.Context
-import info.digitalpoet.eengine.core.listener.BroadcastListenerException
-import info.digitalpoet.eengine.core.listener.ListenerProvider
-import info.digitalpoet.eengine.core.reactor.Completable
+import info.digitalpoet.eengine.core.NotFindAnyInstance
+import info.digitalpoet.eengine.core.client.Client
+import info.digitalpoet.eengine.core.request.AuthenticatedRequest
 
-/** <!-- Documentation for: info.digitalpoet.eengine.core.event.ErrorDelegateBroadcastHandler on 22/11/18 -->
+/** <!-- Documentation for: info.digitalpoet.eengine.core.security.ContextAuthenticationProvider on 23/11/18 -->
  *
  * @author Aran Moncusí Ramírez
  */
-class ErrorDelegateBroadcastHandler(
-    context: Context,
-    private val errorHandler: EventErrorHandler
+open class ContextAuthenticationProvider(
+    private val context: Context
 ):
-    AbstractPolicyBroadcastHandler(context)
+    RequestAuthenticationProvider
 {
     //~ Constants ======================================================================================================
 
     //~ Values =========================================================================================================
-
-    val retries: Long = 2L
 
     //~ Properties =====================================================================================================
 
@@ -27,11 +24,12 @@ class ErrorDelegateBroadcastHandler(
 
     //~ Open Methods ===================================================================================================
 
-    override fun polices(stream: Completable): Completable
+    override fun approveRequest(request: AuthenticatedRequest): Boolean
     {
-        return stream
-            .retry(retries)
-            .doOnError(BroadcastListenerException::class.java) { errorHandler.manageEvent(it.event, it.listenerId) }
+        val client = context.findClientById(request.clientId) ?:
+                throw NotFindAnyInstance(Client::class, "Can't find client by id: ${request.clientId} in request")
+
+        return request.matchKey(client.key)
     }
 
     //~ Methods ========================================================================================================

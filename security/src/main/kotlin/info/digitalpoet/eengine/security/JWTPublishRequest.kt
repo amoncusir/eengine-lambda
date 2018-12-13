@@ -1,25 +1,23 @@
-package info.digitalpoet.eengine.core.event
+package info.digitalpoet.eengine.security
 
-import info.digitalpoet.eengine.core.Context
-import info.digitalpoet.eengine.core.listener.BroadcastListenerException
-import info.digitalpoet.eengine.core.listener.ListenerProvider
-import info.digitalpoet.eengine.core.reactor.Completable
+import info.digitalpoet.eengine.core.event.Event
+import info.digitalpoet.eengine.core.request.PublishRequest
 
-/** <!-- Documentation for: info.digitalpoet.eengine.core.event.ErrorDelegateBroadcastHandler on 22/11/18 -->
+/** <!-- Documentation for: info.digitalpoet.eengine.security.JWTPublishRequest on 11/12/18 -->
  *
  * @author Aran Moncusí Ramírez
  */
-class ErrorDelegateBroadcastHandler(
-    context: Context,
-    private val errorHandler: EventErrorHandler
+abstract class JWTPublishRequest(
+    override val event: Event,
+    channel: String,
+    token: String
 ):
-    AbstractPolicyBroadcastHandler(context)
+    JWTAuthenticationRequest(channel, token),
+        PublishRequest
 {
     //~ Constants ======================================================================================================
 
     //~ Values =========================================================================================================
-
-    val retries: Long = 2L
 
     //~ Properties =====================================================================================================
 
@@ -27,14 +25,10 @@ class ErrorDelegateBroadcastHandler(
 
     //~ Open Methods ===================================================================================================
 
-    override fun polices(stream: Completable): Completable
-    {
-        return stream
-            .retry(retries)
-            .doOnError(BroadcastListenerException::class.java) { errorHandler.manageEvent(it.event, it.listenerId) }
-    }
-
     //~ Methods ========================================================================================================
+
+    override val channel: String
+        get() = event.channel
 
     //~ Operators ======================================================================================================
 }

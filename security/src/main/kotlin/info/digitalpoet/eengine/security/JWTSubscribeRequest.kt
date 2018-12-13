@@ -1,38 +1,29 @@
-package info.digitalpoet.eengine.core.event
+package info.digitalpoet.eengine.security
 
-import info.digitalpoet.eengine.core.Context
-import info.digitalpoet.eengine.core.listener.BroadcastListenerException
-import info.digitalpoet.eengine.core.listener.ListenerProvider
-import info.digitalpoet.eengine.core.reactor.Completable
+import info.digitalpoet.eengine.core.request.SubscribeRequest
 
-/** <!-- Documentation for: info.digitalpoet.eengine.core.event.ErrorDelegateBroadcastHandler on 22/11/18 -->
+/** <!-- Documentation for: info.digitalpoet.eengine.security.JWTSubscribeRequest on 11/12/18 -->
  *
  * @author Aran Moncusí Ramírez
  */
-class ErrorDelegateBroadcastHandler(
-    context: Context,
-    private val errorHandler: EventErrorHandler
+abstract class JWTSubscribeRequest(
+    override val type: String,
+    override val protocol: String,
+    channel: String,
+    token: String
 ):
-    AbstractPolicyBroadcastHandler(context)
+    JWTAuthenticationRequest(channel, token),
+        SubscribeRequest
 {
     //~ Constants ======================================================================================================
 
     //~ Values =========================================================================================================
-
-    val retries: Long = 2L
 
     //~ Properties =====================================================================================================
 
     //~ Constructors ===================================================================================================
 
     //~ Open Methods ===================================================================================================
-
-    override fun polices(stream: Completable): Completable
-    {
-        return stream
-            .retry(retries)
-            .doOnError(BroadcastListenerException::class.java) { errorHandler.manageEvent(it.event, it.listenerId) }
-    }
 
     //~ Methods ========================================================================================================
 

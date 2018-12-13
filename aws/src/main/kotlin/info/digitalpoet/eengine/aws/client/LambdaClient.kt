@@ -1,43 +1,60 @@
-package info.digitalpoet.eengine.core.client
+package info.digitalpoet.eengine.aws.client
 
-/** <!-- Documentation for: info.digitalpoet.eengine.core.client.Client on 22/11/18 -->
+import info.digitalpoet.eengine.core.client.Client
+import info.digitalpoet.eengine.core.client.Publisher
+import info.digitalpoet.eengine.core.client.Subscriber
+
+/** <!-- Documentation for: info.digitalpoet.eengine.aws.client.LambdaClient on 23/11/18 -->
  *
  * @author Aran Moncusí Ramírez
  */
-interface Client
+class LambdaClient: Client
 {
     //~ Constants ======================================================================================================
 
+    companion object
+    {
+        const val TYPE = "LAMBDA"
+    }
+
     //~ Values =========================================================================================================
 
-    val name: String
+    lateinit var arn: String
+
+    override lateinit var name: String
 
     /**
      * Unique ID for client. Used for authenticate the requests
      */
-    val id: String
+    override lateinit var id: String
 
     /**
      * Random Key for verify requests
      */
-    val key: ByteArray
+    override lateinit var key: ByteArray
 
     /**
      * Type of client
      */
-    val type: String
+    override val type: String
+        get() = TYPE
 
     /**
      * If client has any subscriber, the subscriber
      */
-    val subscriber: Subscriber?
+    override var subscriber: Subscriber? = null
 
     /**
      * If client has any publisher, the publisher
      */
-    val publisher: Publisher?
+    override var publisher: Publisher? = null
+
 
     //~ Properties =====================================================================================================
+
+    //~ Constructors ===================================================================================================
+
+    //~ Open Methods ===================================================================================================
 
     //~ Methods ========================================================================================================
 

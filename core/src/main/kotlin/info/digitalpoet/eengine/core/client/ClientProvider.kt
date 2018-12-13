@@ -1,13 +1,10 @@
-package info.digitalpoet.eengine.core.listener
+package info.digitalpoet.eengine.core.client
 
-import info.digitalpoet.eengine.core.client.Client
-import info.digitalpoet.eengine.core.request.SubscribeRequest
-
-/** <!-- Documentation for: info.digitalpoet.eengine.core.listener.ListenerBuilder on 23/11/18 -->
+/** <!-- Documentation for: info.digitalpoet.eengine.core.client.ClientProvider on 23/11/18 -->
  *
  * @author Aran Moncusí Ramírez
  */
-interface ListenerBuilder
+interface ClientProvider
 {
     //~ Constants ======================================================================================================
 
@@ -17,11 +14,12 @@ interface ListenerBuilder
 
     //~ Methods ========================================================================================================
 
-    fun create(client: Client): Listener
-
-    fun create(clients: List<Client>): List<Listener> = clients.map { create(it) }
-
-    fun update(subscribeRequest: SubscribeRequest, listener: Listener)
+    /**
+     * Load clients from source.
+     *
+     * @return List<Client> Generated [Client] list from sources.
+     */
+    fun loadClients(): List<Client>
 
     //~ Operators ======================================================================================================
 }

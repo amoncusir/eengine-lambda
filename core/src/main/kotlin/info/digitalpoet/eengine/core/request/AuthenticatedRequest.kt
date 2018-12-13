@@ -14,7 +14,7 @@ interface AuthenticatedRequest
 
     val channel: String
 
-    val payload: Map<String, String>
+    val metadata: Map<String, String>?
 
     //~ Properties =====================================================================================================
 

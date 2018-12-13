@@ -1,0 +1,9 @@
+
+dependencies {
+    
+    // EEngine
+    implementation project(':core')
+    
+    // JWT Library
+    compile('com.auth0:java-jwt:3.4.1')
+}

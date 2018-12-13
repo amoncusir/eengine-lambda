@@ -1,25 +1,20 @@
-package info.digitalpoet.eengine.core.event
+package info.digitalpoet.eengine.core.request
 
-import info.digitalpoet.eengine.core.Context
-import info.digitalpoet.eengine.core.listener.BroadcastListenerException
-import info.digitalpoet.eengine.core.listener.ListenerProvider
-import info.digitalpoet.eengine.core.reactor.Completable
-
-/** <!-- Documentation for: info.digitalpoet.eengine.core.event.ErrorDelegateBroadcastHandler on 22/11/18 -->
+/** <!-- Documentation for: info.digitalpoet.eengine.core.request.SimpleAuthenticatedRequest on 11/12/18 -->
  *
  * @author Aran Moncusí Ramírez
  */
-class ErrorDelegateBroadcastHandler(
-    context: Context,
-    private val errorHandler: EventErrorHandler
+open class SimpleAuthenticatedRequest(
+    override val clientId: String,
+    override val channel: String,
+    override val metadata: Map<String, String>?,
+    val secret: ByteArray
 ):
-    AbstractPolicyBroadcastHandler(context)
+    AuthenticatedRequest
 {
     //~ Constants ======================================================================================================
 
     //~ Values =========================================================================================================
-
-    val retries: Long = 2L
 
     //~ Properties =====================================================================================================
 
@@ -27,14 +22,9 @@ class ErrorDelegateBroadcastHandler(
 
     //~ Open Methods ===================================================================================================
 
-    override fun polices(stream: Completable): Completable
-    {
-        return stream
-            .retry(retries)
-            .doOnError(BroadcastListenerException::class.java) { errorHandler.manageEvent(it.event, it.listenerId) }
-    }
-
     //~ Methods ========================================================================================================
+
+    override fun matchKey(key: ByteArray): Boolean = secret.contentEquals(key)
 
     //~ Operators ======================================================================================================
 }

@@ -13,6 +13,7 @@ buildscript {
     }
 
     dependencies {
+        
         // Kotlin Plugin
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlin_version}")
 
@@ -58,9 +59,11 @@ subprojects {
 
     dependencies {
         
+        // Kotlin dependencies
         implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
         implementation 'org.jetbrains.kotlin:kotlin-reflect'
         
+        // Rector dependencies for streams
         implementation("io.projectreactor:reactor-core:3.2.3.RELEASE")
     }
 
@@ -68,6 +71,15 @@ subprojects {
         parallel = true
         config = files("${project.rootProject.projectDir.absolutePath}/detekt-config.yml")
     }
+
+    compileKotlin {
+        kotlinOptions.jvmTarget = "1.8"
+    }
+
+    compileTestKotlin {
+        kotlinOptions.jvmTarget = "1.8"
+    }
+
 }
 
 task deepClean(type: Delete) {

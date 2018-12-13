@@ -1,25 +1,16 @@
-package info.digitalpoet.eengine.core.event
+package info.digitalpoet.eengine.core
 
-import info.digitalpoet.eengine.core.Context
-import info.digitalpoet.eengine.core.listener.BroadcastListenerException
-import info.digitalpoet.eengine.core.listener.ListenerProvider
-import info.digitalpoet.eengine.core.reactor.Completable
-
-/** <!-- Documentation for: info.digitalpoet.eengine.core.event.ErrorDelegateBroadcastHandler on 22/11/18 -->
+/** <!-- Documentation for: info.digitalpoet.eengine.core.SystemEnvironmentConfigurationProperties on 23/11/18 -->
  *
  * @author Aran Moncusí Ramírez
  */
-class ErrorDelegateBroadcastHandler(
-    context: Context,
-    private val errorHandler: EventErrorHandler
-):
-    AbstractPolicyBroadcastHandler(context)
+class SystemEnvironmentConfigurationProperties: ConfigurationProperties
 {
     //~ Constants ======================================================================================================
 
     //~ Values =========================================================================================================
 
-    val retries: Long = 2L
+    val env: Map<String, String> = System.getenv()
 
     //~ Properties =====================================================================================================
 
@@ -27,12 +18,9 @@ class ErrorDelegateBroadcastHandler(
 
     //~ Open Methods ===================================================================================================
 
-    override fun polices(stream: Completable): Completable
-    {
-        return stream
-            .retry(retries)
-            .doOnError(BroadcastListenerException::class.java) { errorHandler.manageEvent(it.event, it.listenerId) }
-    }
+    override fun get(key: String): String? = env.get(key)
+
+    override fun contains(key: String): Boolean = key in env
 
     //~ Methods ========================================================================================================
 

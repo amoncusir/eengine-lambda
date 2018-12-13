@@ -1,5 +1,6 @@
 package info.digitalpoet.eengine.core.event
 
+import info.digitalpoet.eengine.core.Context
 import info.digitalpoet.eengine.core.listener.Listener
 import info.digitalpoet.eengine.core.listener.ListenerProvider
 import info.digitalpoet.eengine.core.reactor.Completable
@@ -11,7 +12,7 @@ import reactor.core.publisher.toMono
  * @author Aran Moncusí Ramírez
  */
 abstract class AbstractPolicyBroadcastHandler(
-    private val listenerProvider: ListenerProvider
+    private val context: Context
 ):
     BroadcastHandler
 {
@@ -40,8 +41,8 @@ abstract class AbstractPolicyBroadcastHandler(
     @Throws(EventBroadcastException::class)
     override fun broadcast(event: Event): Completable
     {
-        val listeners = listenerProvider.getOrderedListenersFromChannel(event.channel) ?:
-                throw EventBroadcastException(event, "Not exist any listener for channel: ${event.channel}")
+        val listeners = context.getOrderedListenersFromChannel(event.channel) ?:
+                throw EventBroadcastException(event, "Not exist any listener for matchChannel: ${event.channel}")
 
         return initStream(event, listeners)
             .prepare()
