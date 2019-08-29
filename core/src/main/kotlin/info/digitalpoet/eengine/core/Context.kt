@@ -1,37 +1,39 @@
 package info.digitalpoet.eengine.core
 
-import info.digitalpoet.eengine.core.client.Client
-import info.digitalpoet.eengine.core.listener.Listener
+import info.digitalpoet.eengine.core.message.ChannelMatcherFactory
+import info.digitalpoet.eengine.core.repository.MessageRepository
+import info.digitalpoet.eengine.core.repository.SubscriberRepository
+import info.digitalpoet.eengine.core.subscriber.DelivererFactory
+import java.lang.NullPointerException
 
-/** <!-- Documentation for: info.digitalpoet.eengine.core.Context on 22/11/18 -->
- *
- * Save context elements.
+/** <!-- Documentation for: info.digitalpoet.eengine.core.Context on 29/8/19 -->
  *
  * @author Aran Moncusí Ramírez
  */
-interface Context
+class Context private constructor(
+    val subscriberRepository: SubscriberRepository,
+    val messageRepository: MessageRepository,
+    val channelMatcherFactory: ChannelMatcherFactory,
+    val delivererFactory: DelivererFactory
+)
 {
-    //~ Constants ======================================================================================================
+    companion object
+    {
+        private var pContext: Context? = null
 
-    //~ Values =========================================================================================================
+        val context: Context
+            get() = pContext ?: throw NullPointerException("Context not load")
 
-    val clients: List<Client>
+        fun loadFromConfiguration(configuration: ContextConfiguration)
+        {
+            pContext = createUsingConfiguration(configuration)
+        }
 
-    val listeners: List<Listener>
-
-    val properties: ConfigurationProperties
-
-    //~ Properties =====================================================================================================
-
-    //~ Methods ========================================================================================================
-
-    fun load()
-
-    fun isInitialized(): Boolean
-
-    fun findClientById(clientId: String): Client?
-
-    fun getOrderedListenersFromChannel(channel: String): List<Listener>?
-
-    //~ Operators ======================================================================================================
+        private fun createUsingConfiguration(configuration: ContextConfiguration): Context = Context(
+            configuration.createSubscriberRepository(),
+            configuration.createMessageRepository(),
+            configuration.createChannelMatcherFactory(),
+            configuration.createDelivererFactory()
+        )
+    }
 }

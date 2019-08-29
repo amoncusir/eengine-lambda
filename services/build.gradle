@@ -1,5 +1,0 @@
- dependencies {
-     
-     // EEngine Core
-     implementation project(':core')
- }
