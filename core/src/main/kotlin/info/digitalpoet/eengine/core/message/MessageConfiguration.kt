@@ -4,4 +4,9 @@ package info.digitalpoet.eengine.core.message
  *
  * @author Aran Moncusí Ramírez
  */
-class MessageConfiguration
+class MessageConfiguration(
+    val broadcastType: String,
+    val replyIntents: Int = 3,
+    val errorIntents: Int = 0,
+    val errorChannel: String = "eengine/error"
+)

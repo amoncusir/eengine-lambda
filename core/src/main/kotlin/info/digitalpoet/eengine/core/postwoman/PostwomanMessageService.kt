@@ -21,7 +21,8 @@ class PostwomanMessageService: MessageService
 
     override fun delivery(message: Message)
     {
-
+        // 1. Encontrar los servicios
+        // 2.
     }
 
     //~ Methods ========================================================================================================
