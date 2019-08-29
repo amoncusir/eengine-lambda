@@ -1,9 +1,9 @@
-package info.digitalpoet.eengine.core.postwoman
+package info.digitalpoet.eengine.core.broadcast
 
 import info.digitalpoet.eengine.core.subscriber.Service
 import info.digitalpoet.eengine.core.subscriber.Subscriber
 
-/** <!-- Documentation for: info.digitalpoet.eengine.core.postwoman.BroadcastHandler on 29/8/19 -->
+/** <!-- Documentation for: info.digitalpoet.eengine.core.broadcast.BroadcastHandler on 29/8/19 -->
  *
  * @author Aran Moncusí Ramírez
  */

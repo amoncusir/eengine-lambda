@@ -1,4 +1,4 @@
-package info.digitalpoet.eengine.core.postwoman
+package info.digitalpoet.eengine.core.broadcast
 
 import info.digitalpoet.eengine.core.subscriber.Service
 import info.digitalpoet.eengine.core.subscriber.Subscriber
