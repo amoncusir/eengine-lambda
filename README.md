@@ -26,7 +26,7 @@ Un sistema de deliveración de mensajes entre aplicativos, usando una arquitectu
 - Crear un contrato de repositorio que provee el guardado y recuperacion. Implementarlo con S3 de AWS.
 - Que cada subscriptor tenga como uno de los parametros los canales a los que esta subscrito.
 - Al enviar el mensaje desde el publicador, tendra configuraciones adicionales.
-- Cada subscritpro tendra un id de servicio por el cual seran agrupados
+- Cada subscriptor tendra un id de servicio por el cual seran agrupados
 - Optimizacion de los procesos y recursos
 - Crear un canal especial llamado `eengine/error` el cual se enviaran los mensjes fallidos. Implementar un limite de
   reintentos

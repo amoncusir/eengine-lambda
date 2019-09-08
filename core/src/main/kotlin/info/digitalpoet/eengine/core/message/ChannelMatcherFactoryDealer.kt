@@ -1,10 +1,12 @@
 package info.digitalpoet.eengine.core.message
 
+import javax.json.JsonObject
+
 /** <!-- Documentation for: info.digitalpoet.eengine.core.message.ChannelMatcherFactoryDealer on 29/8/19 -->
  *
  * @author Aran Moncusí Ramírez
  */
-class ChannelMatcherFactoryDealer(private val factories: List<ChannelMatcherFactory>): ChannelMatcherFactory
+class ChannelMatcherFactoryDealer(factories: List<ChannelMatcherFactory>, private val default: ChannelMatcherFactory)
 {
     //~ Constants ======================================================================================================
 
@@ -12,30 +14,15 @@ class ChannelMatcherFactoryDealer(private val factories: List<ChannelMatcherFact
 
     //~ Properties =====================================================================================================
 
-    private val cache: MutableMap<String, ChannelMatcher> = mutableMapOf()
+    private val factories: Map<String, ChannelMatcherFactory> = factories.map { it.type to it }.toMap()
 
     //~ Constructors ===================================================================================================
 
     //~ Open Methods ===================================================================================================
 
-    override fun instance(channelDescriptor: String): ChannelMatcher
+    fun instance(type: String, data: JsonObject): ChannelMatcher
     {
-        val cached: ChannelMatcher? = cache[channelDescriptor]
-
-        if (cached != null) return cached
-
-        for (factory in factories)
-        {
-            val matcher = factory.instance(channelDescriptor)
-
-            if (matcher != null)
-            {
-                cache[channelDescriptor] = matcher
-                return matcher
-            }
-        }
-
-        throw NotFoundAnyChannelMatcherError(channelDescriptor)
+        return factories.getOrDefault(type, default).instance(data)
     }
 
     //~ Methods ========================================================================================================

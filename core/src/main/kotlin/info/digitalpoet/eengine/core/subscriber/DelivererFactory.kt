@@ -10,5 +10,5 @@ interface DelivererFactory
 {
     val type: String
 
-    fun instance(type: String, config: JsonObject): Deliverer?
+    fun instance(config: JsonObject): Deliverer?
 }

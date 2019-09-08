@@ -6,13 +6,11 @@ import javax.json.JsonObject
  *
  * @author Aran Moncusí Ramírez
  */
-class DelivererFactoryDealer(factories: List<DelivererFactory>): DelivererFactory
+class DelivererFactoryDealer(factories: List<DelivererFactory>)
 {
     //~ Constants ======================================================================================================
 
     //~ Values =========================================================================================================
-
-    override val type: String = "none"
 
     private val factories: Map<String, DelivererFactory> = mutableMapOf(*factories.map { it.type to it }.toTypedArray())
 
@@ -22,9 +20,9 @@ class DelivererFactoryDealer(factories: List<DelivererFactory>): DelivererFactor
 
     //~ Open Methods ===================================================================================================
 
-    override fun instance(type: String, config: JsonObject): Deliverer?
+    fun instance(type: String, config: JsonObject): Deliverer?
     {
-        return (factories[type] ?: throw NotFoundAnyDelivererError(type)).instance(type, config)
+        return (factories[type] ?: throw NotFoundAnyDelivererError(type)).instance(config)
     }
 
     //~ Methods ========================================================================================================

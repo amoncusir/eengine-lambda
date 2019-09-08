@@ -9,7 +9,8 @@ import javax.json.JsonObject
 data class SubscriberPetition(
     val id: String,
     val serviceId: String,
-    val channelDescriptor: String,
+    val channelType: String,
+    val channelConfig: JsonObject,
     val delivererType: String,
     val delivererConfig: JsonObject
 )
@@ -20,7 +21,7 @@ data class SubscriberPetition(
  */
 interface SubscriberService
 {
-    fun registerSubscriber(petition: SubscriberPetition)
+    fun createSubscriber(petition: SubscriberPetition)
 
     fun removeSubscriber(id: String)
 }
