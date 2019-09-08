@@ -6,4 +6,4 @@ import javax.json.JsonObject
  *
  * @author Aran Moncusí Ramírez
  */
-class Publisher(val name: String, metadata: JsonObject? = null)
+class Publisher(val name: String, val metadata: JsonObject? = null)

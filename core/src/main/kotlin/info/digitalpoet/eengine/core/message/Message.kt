@@ -11,5 +11,5 @@ class Message(
     val channel: String,
     val data: ByteArray,
     val publisher: Publisher,
-    val configuration: MessageConfiguration
+    val configuration: MessageConfiguration?
 )
