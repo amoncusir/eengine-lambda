@@ -1,7 +1,5 @@
 package info.digitalpoet.eengine.core.message
 
-import javax.json.JsonObject
-
 /** <!-- Documentation for: info.digitalpoet.eengine.core.message.ChannelMatcherFactoryDealer on 29/8/19 -->
  *
  * @author Aran Moncusí Ramírez
@@ -20,7 +18,7 @@ class ChannelMatcherFactoryDealer(factories: List<ChannelMatcherFactory>, privat
 
     //~ Open Methods ===================================================================================================
 
-    fun instance(type: String, data: JsonObject): ChannelMatcher
+    fun instance(type: String, data: Map<String, Any?>): ChannelMatcher
     {
         return factories.getOrDefault(type, default).instance(data)
     }

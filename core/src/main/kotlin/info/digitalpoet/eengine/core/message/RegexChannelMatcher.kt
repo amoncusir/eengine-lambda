@@ -1,9 +1,5 @@
 package info.digitalpoet.eengine.core.message
 
-import javax.json.JsonArray
-import javax.json.JsonObject
-import javax.json.JsonString
-
 /** <!-- Documentation for: info.digitalpoet.eengine.core.message.RegexChannelMatcher on 8/9/19 -->
  *
  * @author Aran Moncusí Ramírez
@@ -12,25 +8,27 @@ class RegexChannelMatcher(private val regex: Regex): ChannelMatcher
 {
     companion object
     {
-        class Factory: ChannelMatcherFactory
+        const val TYPE = "regex"
+    }
+
+    class Factory: ChannelMatcherFactory
+    {
+        override val type = TYPE
+
+        @Suppress("UNCHECKED_CAST")
+        override fun instance(data: Map<String, Any?>): ChannelMatcher
         {
-            override val type = "string"
+            val regexFormula = data["regex"] as String
+            val options = getOptions(data.getOrDefault("options", listOf<String>()) as List<String>)
 
-            override fun instance(data: JsonObject): ChannelMatcher
-            {
-                val regexFormula = data.getString("regex")
-                val options = getOptions(data.getJsonArray("options"))
+            return RegexChannelMatcher(Regex(regexFormula, options))
+        }
 
-                return RegexChannelMatcher(Regex(regexFormula, options))
-            }
-
-            private fun getOptions(options: JsonArray): Set<RegexOption>
-            {
-                return options.getValuesAs(JsonString::class.java)
-                    .map { it.string }
-                    .map { RegexOption.valueOf(it) }
-                    .toSet()
-            }
+        private fun getOptions(options: List<String>): Set<RegexOption>
+        {
+            return options
+                .map { RegexOption.valueOf(it) }
+                .toSet()
         }
     }
 

@@ -38,20 +38,27 @@ open class PostwomanMessageService(
 
     override fun delivery(message: Message)
     {
-        // 1. Guardar el mensaje
-        // 2. Encontrar los servicios
-        // 3. Enviar el mensaje
-
         saveMessage(message)
 
-        val configuration = message.configuration ?: defaultMessageConfiguration
+        val configuration = MessageConfiguration.merge(message.configuration, defaultMessageConfiguration)
         val services = findServices(message.channel)
-        val broadcastHandler = broadcastHandlerDealer.instance(configuration.broadcastType)
+        val broadcastHandler = broadcastHandlerDealer.instance(configuration.broadcastType!!)
         val subscribers = broadcastHandler.select(services)
 
-        for (subscriber in subscribers)
+        if (subscribers.isNotEmpty())
         {
-            deliveryMessageToSubscriber(subscriber, message, configuration)
+            var existAnyError: DeliveryError? = null
+
+            for (subscriber in subscribers)
+            {
+                existAnyError = deliveryMessageToSubscriber(subscriber, message, configuration)
+            }
+
+            if (existAnyError is DeliveryError) throw existAnyError
+        }
+        else
+        {
+            throw NoFoundAnySubscriber("In channel: ${message.channel} with broadcast: ${broadcastHandler.type}")
         }
     }
 
@@ -59,9 +66,10 @@ open class PostwomanMessageService(
         subscriber: Subscriber,
         message: Message,
         configuration: MessageConfiguration
-    )
+    ): DeliveryError?
     {
-        val maxIntents = configuration.replyIntents;
+        val maxIntents = configuration.replyIntents!!;
+        var deliveryError: DeliveryError? = null
         var intents = 0
 
         do
@@ -75,11 +83,17 @@ open class PostwomanMessageService(
                 logger.error(error) { "Error when try to send message: ${message.id}" }
 
                 intents++
+
+                deliveryError = error
+
                 continue
             }
 
             break
+
         } while (intents < maxIntents)
+
+        return deliveryError
     }
 
     protected open fun saveMessage(message: Message)

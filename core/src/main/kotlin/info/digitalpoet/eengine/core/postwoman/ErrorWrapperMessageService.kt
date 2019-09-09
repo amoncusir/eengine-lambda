@@ -7,7 +7,6 @@ import info.digitalpoet.eengine.core.publisher.Publisher
 import info.digitalpoet.eengine.core.service.MessageService
 import mu.KotlinLogging
 import java.util.UUID
-import javax.json.Json
 
 /** <!-- Documentation for: info.digitalpoet.eengine.core.postwoman.ErrorWrapperMessageService on 8/9/19 -->
  *
@@ -23,8 +22,8 @@ open class ErrorWrapperMessageService(
 
     override fun delivery(message: Message)
     {
-        val configuration = message.configuration ?: defaultMessageConfiguration
-        val maxIntents = configuration.errorIntents
+        val configuration = MessageConfiguration.merge(message.configuration, defaultMessageConfiguration)
+        val maxIntents = configuration.errorIntents!!
         var intents = 0
         var hasError = false
 
@@ -32,10 +31,13 @@ open class ErrorWrapperMessageService(
         {
             try
             {
-                delegator.delivery(message);
+                delegator.delivery(message)
+                break
             }
             catch (error: Throwable)
             {
+                logger.warn { "Error when try to send message: ${message.id}" }
+
                 hasError = true
 
                 if (error is NoRetryError)
@@ -53,11 +55,13 @@ open class ErrorWrapperMessageService(
 
             try
             {
-                delegator.delivery(errorMessage);
+                delegator.delivery(errorMessage)
             }
             catch (error: Throwable)
             {
                 logger.error(error) { "Error when try to send error message: ${errorMessage.id}" }
+
+                throw error
             }
         }
     }
@@ -66,8 +70,8 @@ open class ErrorWrapperMessageService(
     {
         return Message(
             UUID.randomUUID().toString(),
-            configuration.errorChannel,
-            message.data,
+            configuration.errorChannel!!,
+            message.content,
             createPublisher(message, message.publisher),
             configuration
         )
@@ -75,12 +79,12 @@ open class ErrorWrapperMessageService(
 
     protected open fun createPublisher(message: Message, publisher: Publisher): Publisher
     {
-        val publisherData = Json.createObjectBuilder()
-            .add("originalName", publisher.name)
-            .add("originalMetadata", publisher.metadata)
-            .add("originalMessageId", message.id)
-            .add("originalMessageChannel", message.channel)
-            .build()
+        val publisherData = mapOf(
+            "originalName" to publisher.name,
+            "originalMetadata" to publisher.metadata,
+            "originalMessageId" to message.id,
+            "originalMessageChannel" to message.channel
+        )
 
         return Publisher("ErrorWrapperMessageService", publisherData)
     }

@@ -6,4 +6,4 @@ import info.digitalpoet.eengine.core.message.Message
  *
  * @author Aran Moncusí Ramírez
  */
-class DeliveryError(override val message: String, override val cause: Throwable?): RuntimeException(message, cause)
+class DeliveryError(override val message: String, override val cause: Throwable? = null): RuntimeException(message, cause)

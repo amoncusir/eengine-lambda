@@ -12,12 +12,12 @@ open class OnCachedSubscriberRepository(
     protected val persistentRepository: SubscriberRepository,
     val ttl: Int = 10000, // 10 seconds
     protected val hardConsistency: Boolean = false
-    ):
+):
     SubscriberRepository
 {
     private val subscribers: MutableList<Subscriber> = mutableListOf()
 
-    private var lastCheck: Long = Date().time
+    private var lastCheck: Long? = null
 
     override fun save(subscriber: Subscriber)
     {
@@ -52,12 +52,14 @@ open class OnCachedSubscriberRepository(
         }
     }
 
-    protected fun needRefresh(): Boolean = lastCheck < Date().time - ttl
+    protected open fun needRefresh(): Boolean = lastCheck?.let { lastCheck!! < Date().time - ttl } ?: true
 
-    protected fun updateSubscribers(): MutableList<Subscriber>
+    protected open fun updateSubscribers(): MutableList<Subscriber>
     {
         subscribers.clear()
         subscribers.addAll(persistentRepository.getAllSubscribers())
+
+        lastCheck = Date().time
 
         return subscribers
     }

@@ -6,4 +6,4 @@ import java.lang.RuntimeException
  *
  * @author Aran Moncusí Ramírez
  */
-open class NoRetryError(message: String?, cause: Throwable?) : RuntimeException(message, cause)
+open class NoRetryError(message: String?, cause: Throwable? = null) : RuntimeException(message, cause)

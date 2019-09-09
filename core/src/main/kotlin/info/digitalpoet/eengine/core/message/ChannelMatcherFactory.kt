@@ -1,7 +1,5 @@
 package info.digitalpoet.eengine.core.message
 
-import javax.json.JsonObject
-
 /** <!-- Documentation for: info.digitalpoet.eengine.core.message.ChannelMatcherFactory on 29/8/19 -->
  *
  * Factory implementation for class `ChannelMatcher`
@@ -12,5 +10,5 @@ interface ChannelMatcherFactory
 {
     val type: String
 
-    fun instance(data: JsonObject): ChannelMatcher
+    fun instance(data: Map<String, Any?>): ChannelMatcher
 }

@@ -1,7 +1,5 @@
 package info.digitalpoet.eengine.core.service
 
-import javax.json.JsonObject
-
 /** <!-- Documentation for: info.digitalpoet.eengine.core.service.SubscriberService on 29/8/19 -->
  *
  * @author Aran Moncusí Ramírez
@@ -10,9 +8,9 @@ data class SubscriberPetition(
     val id: String,
     val serviceId: String,
     val channelType: String,
-    val channelConfig: JsonObject,
+    val channelConfig: Map<String, Any?>,
     val delivererType: String,
-    val delivererConfig: JsonObject
+    val delivererConfig: Map<String, Any?>
 )
 
 /** <!-- Documentation for: info.digitalpoet.eengine.core.service.SubscriberService on 29/8/19 -->

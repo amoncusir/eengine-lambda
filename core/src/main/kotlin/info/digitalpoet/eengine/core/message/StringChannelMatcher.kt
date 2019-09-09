@@ -1,25 +1,32 @@
 package info.digitalpoet.eengine.core.message
 
-import javax.json.JsonObject
-
 /** <!-- Documentation for: info.digitalpoet.eengine.core.message.StringChannelMatcher on 8/9/19 -->
  *
  * @author Aran Moncusí Ramírez
  */
-class StringChannelMatcher(private val keyword: String): ChannelMatcher
+class StringChannelMatcher(private val keyword: String, private val ignoreCase: Boolean = false): ChannelMatcher
 {
     companion object
     {
-        class Factory: ChannelMatcherFactory
-        {
-            override val type = "string"
+        const val TYPE = "string"
 
-            override fun instance(data: JsonObject): ChannelMatcher
-            {
-                return StringChannelMatcher(data.getString("keyword"))
-            }
+    }
+
+    class Factory: ChannelMatcherFactory
+    {
+        override val type = TYPE
+
+        override fun instance(data: Map<String, Any?>): ChannelMatcher
+        {
+            val keyword = data["keyword"] as String
+            val ignoreCase = data["ignoreCase"] as? Boolean
+
+            return ignoreCase?.let { StringChannelMatcher(keyword, it) } ?: StringChannelMatcher(keyword)
         }
     }
 
-    override fun match(channel: String): Boolean = channel == keyword
+    override fun match(channel: String): Boolean = if (ignoreCase)
+        channel.toLowerCase() == keyword.toLowerCase()
+    else
+        channel == keyword
 }
