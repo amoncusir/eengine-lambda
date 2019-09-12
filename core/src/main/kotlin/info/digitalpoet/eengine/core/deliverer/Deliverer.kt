@@ -1,8 +1,8 @@
-package info.digitalpoet.eengine.core.subscriber
+package info.digitalpoet.eengine.core.deliverer
 
 import info.digitalpoet.eengine.core.message.Message
 
-/** <!-- Documentation for: info.digitalpoet.eengine.core.subscriber.Deliverer on 29/8/19 -->
+/** <!-- Documentation for: info.digitalpoet.eengine.core.deliverer.Deliverer on 29/8/19 -->
  *
  * Class to manage the delivery to the application service subscriber
  *
@@ -10,5 +10,5 @@ import info.digitalpoet.eengine.core.message.Message
  */
 interface Deliverer
 {
-    fun delivery(message: Message)
+    suspend fun delivery(message: Message)
 }

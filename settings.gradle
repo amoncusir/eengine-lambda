@@ -5,4 +5,6 @@
 // Define all contracts
 include(":core")
 
+include(":http")
+
 rootProject.name = 'EEngine'

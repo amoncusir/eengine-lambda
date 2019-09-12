@@ -1,5 +1,7 @@
 package info.digitalpoet.eengine.core.service
 
+import info.digitalpoet.eengine.core.subscriber.Subscriber
+
 /** <!-- Documentation for: info.digitalpoet.eengine.core.service.SubscriberService on 29/8/19 -->
  *
  * @author Aran Moncusí Ramírez
@@ -22,4 +24,6 @@ interface SubscriberService
     fun createSubscriber(petition: SubscriberPetition)
 
     fun removeSubscriber(id: String)
+
+    fun getAllSubscribers(): List<Subscriber>
 }

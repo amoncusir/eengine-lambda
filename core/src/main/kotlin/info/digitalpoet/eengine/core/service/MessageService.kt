@@ -9,4 +9,6 @@ import info.digitalpoet.eengine.core.message.Message
 interface MessageService
 {
     fun delivery(message: Message)
+
+    fun deliveryTo(subscriberId: String, message: Message)
 }

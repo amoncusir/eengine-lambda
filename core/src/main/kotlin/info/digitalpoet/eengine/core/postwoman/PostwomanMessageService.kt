@@ -1,14 +1,13 @@
 package info.digitalpoet.eengine.core.postwoman
 
 import info.digitalpoet.eengine.core.broadcast.BroadcastHandlerDealer
+import info.digitalpoet.eengine.core.orchestrator.Orchestrator
 import info.digitalpoet.eengine.core.message.Message
 import info.digitalpoet.eengine.core.message.MessageConfiguration
 import info.digitalpoet.eengine.core.repository.MessageRepository
 import info.digitalpoet.eengine.core.repository.SubscriberRepository
 import info.digitalpoet.eengine.core.service.MessageService
-import info.digitalpoet.eengine.core.subscriber.DeliveryError
 import info.digitalpoet.eengine.core.subscriber.Service
-import info.digitalpoet.eengine.core.subscriber.Subscriber
 import mu.KotlinLogging
 
 /** <!-- Documentation for: info.digitalpoet.eengine.core.postwoman.PostwomanMessageService on 29/8/19 -->
@@ -19,8 +18,8 @@ open class PostwomanMessageService(
     private val messageRepository: MessageRepository,
     private val subscriberRepository: SubscriberRepository,
     private val broadcastHandlerDealer: BroadcastHandlerDealer,
-    private val defaultMessageConfiguration: MessageConfiguration
-
+    private val defaultMessageConfiguration: MessageConfiguration,
+    private val orchestrator: Orchestrator
 ):
     MessageService
 {
@@ -38,6 +37,8 @@ open class PostwomanMessageService(
 
     override fun delivery(message: Message)
     {
+        logger.debug { "New delivery: $message" }
+
         saveMessage(message)
 
         val configuration = MessageConfiguration.merge(message.configuration, defaultMessageConfiguration)
@@ -47,54 +48,33 @@ open class PostwomanMessageService(
 
         if (subscribers.isNotEmpty())
         {
-            var existAnyError: DeliveryError? = null
-
             for (subscriber in subscribers)
             {
-                existAnyError = deliveryMessageToSubscriber(subscriber, message, configuration)
+                orchestrator.put(message, subscriber, configuration);
             }
-
-            if (existAnyError is DeliveryError) throw existAnyError
         }
         else
         {
+            logger.error { "Not found any subscriber for message: $message with broadcast: ${broadcastHandler.type}" }
+
             throw NoFoundAnySubscriber("In channel: ${message.channel} with broadcast: ${broadcastHandler.type}")
         }
     }
 
-    protected open fun deliveryMessageToSubscriber(
-        subscriber: Subscriber,
-        message: Message,
-        configuration: MessageConfiguration
-    ): DeliveryError?
+    override fun deliveryTo(subscriberId: String, message: Message)
     {
-        val maxIntents = configuration.replyIntents!!;
-        var deliveryError: DeliveryError? = null
-        var intents = 0
+        logger.debug { "New delivery directly to subscriber: $subscriberId -> $message" }
 
-        do
-        {
-            try
-            {
-                subscriber.deliverer.delivery(message)
-            }
-            catch (error: DeliveryError)
-            {
-                logger.error(error) { "Error when try to send message: ${message.id}" }
+        saveMessage(message)
 
-                intents++
+        val configuration = MessageConfiguration.merge(message.configuration, defaultMessageConfiguration)
+        val subscriber = subscriberRepository.findById(subscriberId) ?:
+                throw NoFoundAnySubscriber("Not found any subscriber by id: $subscriberId")
 
-                deliveryError = error
-
-                continue
-            }
-
-            break
-
-        } while (intents < maxIntents)
-
-        return deliveryError
+        orchestrator.put(message, subscriber, configuration)
     }
+
+    //~ Methods ========================================================================================================
 
     protected open fun saveMessage(message: Message)
     {
@@ -105,8 +85,6 @@ open class PostwomanMessageService(
     {
         return subscriberRepository.findByChannel(channel)
     }
-
-    //~ Methods ========================================================================================================
 
     //~ Operators ======================================================================================================
 }

@@ -34,6 +34,13 @@ open class OnCachedSubscriberRepository(
             .map { Service(it.key, it.value) }
     }
 
+    override fun findById(subscriberId: String): Subscriber?
+    {
+        if (needRefresh()) updateSubscribers()
+
+        return subscribers.find { it.id == subscriberId }
+    }
+
     override fun getAllSubscribers(): List<Subscriber>
     {
         return if (needRefresh())

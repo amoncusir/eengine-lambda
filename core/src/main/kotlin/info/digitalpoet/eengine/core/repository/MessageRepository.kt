@@ -10,5 +10,5 @@ interface MessageRepository
 {
     fun save(message: Message)
 
-    fun findById(id: String): Message
+    fun findById(id: String): Message?
 }

@@ -58,6 +58,8 @@ subprojects {
         implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
         implementation 'org.jetbrains.kotlin:kotlin-reflect'
 
+        implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.1.1"
+
         implementation 'io.github.microutils:kotlin-logging:1.7.6'
 
         // Logger
@@ -93,7 +95,6 @@ subprojects {
     compileTestKotlin {
         kotlinOptions.jvmTarget = "1.8"
     }
-
 }
 
 task deepClean(type: Delete) {

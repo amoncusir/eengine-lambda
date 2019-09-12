@@ -1,4 +1,4 @@
-package info.digitalpoet.eengine.core.subscriber
+package info.digitalpoet.eengine.core.deliverer
 
 import info.digitalpoet.eengine.core.NoRetryError
 

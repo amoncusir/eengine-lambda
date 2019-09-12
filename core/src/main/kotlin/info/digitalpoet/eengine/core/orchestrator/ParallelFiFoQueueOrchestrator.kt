@@ -1,16 +1,18 @@
-package info.digitalpoet.eengine.core.subscriber
+package info.digitalpoet.eengine.core.orchestrator
 
-/** <!-- Documentation for: info.digitalpoet.eengine.core.subscriber.DelivererFactoryDealer on 29/8/19 -->
+import info.digitalpoet.eengine.core.message.Message
+import info.digitalpoet.eengine.core.message.MessageConfiguration
+import info.digitalpoet.eengine.core.subscriber.Subscriber
+
+/** <!-- Documentation for: info.digitalpoet.eengine.core.orchestrator.ParallelFiFoQueueOrchestrator on 12/9/19 -->
  *
  * @author Aran Moncusí Ramírez
  */
-class DelivererFactoryDealer(factories: List<DelivererFactory>)
+class ParallelFiFoQueueOrchestrator: Orchestrator
 {
     //~ Constants ======================================================================================================
 
     //~ Values =========================================================================================================
-
-    private val factories: Map<String, DelivererFactory> = mutableMapOf(*factories.map { it.type to it }.toTypedArray())
 
     //~ Properties =====================================================================================================
 
@@ -18,9 +20,9 @@ class DelivererFactoryDealer(factories: List<DelivererFactory>)
 
     //~ Open Methods ===================================================================================================
 
-    fun instance(type: String, config: Map<String, Any?>): Deliverer?
+    override fun put(message: Message, subscriber: Subscriber, configuration: MessageConfiguration)
     {
-        return (factories[type] ?: throw NotFoundAnyDelivererError(type)).instance(config)
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     //~ Methods ========================================================================================================

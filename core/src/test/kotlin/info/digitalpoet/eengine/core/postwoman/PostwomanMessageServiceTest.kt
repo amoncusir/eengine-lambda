@@ -19,8 +19,8 @@ import info.digitalpoet.eengine.core.mockSubscriber
 import info.digitalpoet.eengine.core.publisher.Publisher
 import info.digitalpoet.eengine.core.repository.MessageRepository
 import info.digitalpoet.eengine.core.repository.SubscriberRepository
-import info.digitalpoet.eengine.core.subscriber.Deliverer
-import info.digitalpoet.eengine.core.subscriber.DeliveryError
+import info.digitalpoet.eengine.core.deliverer.Deliverer
+import info.digitalpoet.eengine.core.deliverer.DeliveryError
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows

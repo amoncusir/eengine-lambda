@@ -13,6 +13,8 @@ interface SubscriberRepository
 
     fun findByChannel(channel: String): List<Service>
 
+    fun findById(subscriberId: String): Subscriber?
+
     fun getAllSubscribers(): List<Subscriber>
 
     fun deleteSubscriber(id: String)

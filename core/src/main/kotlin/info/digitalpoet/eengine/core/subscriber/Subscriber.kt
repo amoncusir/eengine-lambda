@@ -1,5 +1,6 @@
 package info.digitalpoet.eengine.core.subscriber
 
+import info.digitalpoet.eengine.core.deliverer.Deliverer
 import info.digitalpoet.eengine.core.message.ChannelMatcher
 
 /** <!-- Documentation for: info.digitalpoet.eengine.core.subscriber.Subscriber on 29/8/19 -->
