@@ -1,15 +1,17 @@
-package info.digitalpoet.eengine.core.message
+package info.digitalpoet.eengine.core.matcher
 
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
+import info.digitalpoet.eengine.core.matcher.ChannelMatcherFactory
+import info.digitalpoet.eengine.core.matcher.ChannelMatcherFactoryDealer
 import info.digitalpoet.eengine.core.mockChanelMatcher
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
-/** <!-- Documentation for: info.digitalpoet.eengine.core.message.ChannelMatcherFactoryDealerTest on 9/9/19 -->
+/** <!-- Documentation for: info.digitalpoet.eengine.core.matcher.ChannelMatcherFactoryDealerTest on 9/9/19 -->
  *
  * @author Aran Moncusí Ramírez
  */

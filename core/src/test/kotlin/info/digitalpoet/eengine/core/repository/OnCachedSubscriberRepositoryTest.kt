@@ -6,11 +6,8 @@ import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
-import info.digitalpoet.eengine.core.message.ChannelMatcher
 import info.digitalpoet.eengine.core.mockService
 import info.digitalpoet.eengine.core.mockSubscriber
-import info.digitalpoet.eengine.core.subscriber.Service
-import info.digitalpoet.eengine.core.subscriber.Subscriber
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

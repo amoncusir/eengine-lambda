@@ -1,6 +1,6 @@
-package info.digitalpoet.eengine.core.message
+package info.digitalpoet.eengine.core.matcher
 
-/** <!-- Documentation for: info.digitalpoet.eengine.core.message.RegexChannelMatcher on 8/9/19 -->
+/** <!-- Documentation for: info.digitalpoet.eengine.core.matcher.RegexChannelMatcher on 8/9/19 -->
  *
  * @author Aran Moncusí Ramírez
  */

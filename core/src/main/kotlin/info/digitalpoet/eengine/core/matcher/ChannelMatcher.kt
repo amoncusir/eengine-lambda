@@ -1,6 +1,6 @@
-package info.digitalpoet.eengine.core.message
+package info.digitalpoet.eengine.core.matcher
 
-/** <!-- Documentation for: info.digitalpoet.eengine.core.message.ChannelMatcher on 29/8/19 -->
+/** <!-- Documentation for: info.digitalpoet.eengine.core.matcher.ChannelMatcher on 29/8/19 -->
  *
  * encargado de procesar el canal y aceptar-lo
  *

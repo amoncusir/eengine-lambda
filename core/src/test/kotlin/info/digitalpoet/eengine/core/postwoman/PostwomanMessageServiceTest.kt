@@ -4,7 +4,6 @@ import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.argThat
 import com.nhaarman.mockitokotlin2.atLeastOnce
 import com.nhaarman.mockitokotlin2.doReturn
-import com.nhaarman.mockitokotlin2.doThrow
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.times
@@ -20,7 +19,7 @@ import info.digitalpoet.eengine.core.publisher.Publisher
 import info.digitalpoet.eengine.core.repository.MessageRepository
 import info.digitalpoet.eengine.core.repository.SubscriberRepository
 import info.digitalpoet.eengine.core.deliverer.Deliverer
-import info.digitalpoet.eengine.core.deliverer.DeliveryError
+import info.digitalpoet.eengine.core.orchestrator.Orchestrator
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -31,7 +30,7 @@ import org.junit.jupiter.api.assertThrows
  */
 class PostwomanMessageServiceTest
 {
-    val defaultMessageConfiguration = MessageConfiguration("type", 3, 3, "error")
+    val defaultMessageConfiguration = MessageConfiguration("type")
 
     lateinit var deliverer: Deliverer
 
@@ -44,6 +43,8 @@ class PostwomanMessageServiceTest
     lateinit var subscriberRepository: SubscriberRepository
 
     lateinit var broadcastHandlerDealer: BroadcastHandlerDealer
+
+    lateinit var orchestrator: Orchestrator
 
     //~ BeforeAll ======================================================================================================
 
@@ -78,6 +79,7 @@ class PostwomanMessageServiceTest
         }
 
         subscriberRepository = mock {
+            on { findById(eq("id")) } doReturn subscribers.first()
             on { findByChannel(eq("channel")) } doReturn services
             on { getAllSubscribers() } doReturn subscribers
         }
@@ -85,6 +87,8 @@ class PostwomanMessageServiceTest
         broadcastHandlerDealer = mock {
             on { instance(any()) } doReturn broadcast
         }
+
+        orchestrator = mock {}
     }
 
     //~ Tests ==========================================================================================================
@@ -93,7 +97,7 @@ class PostwomanMessageServiceTest
     fun `Happy path to delivery a message`()
     {
         val postwoman = PostwomanMessageService(
-            messageRepository, subscriberRepository, broadcastHandlerDealer, defaultMessageConfiguration
+            messageRepository, subscriberRepository, broadcastHandlerDealer, defaultMessageConfiguration, orchestrator
         )
 
         val message: Message = mock {
@@ -110,17 +114,38 @@ class PostwomanMessageServiceTest
         //! 2. Find the services by channel
         //! 3. Select the services to delivery the message using the BroadcastHandler
         //! 4. If no have any subscriber, throw an error
-        //! 5. Send the message to all subscribers, and if the delivery has an error, repeat using the config params
+        //! 5. Put to orchestrator
 
         verify(messageRepository, atLeastOnce()).save(argThat { this == message }) // 1
         verify(subscriberRepository, atLeastOnce()).findByChannel(argThat { this == "channel" }) // 2
         verify(broadcastHandlerDealer, atLeastOnce()).instance(argThat { this == "type" }) // Before 3
         verify(broadcast, atLeastOnce()).select(argThat { size == 3 }) // 3
-        verify(deliverer, times(3)).delivery(argThat { this == message }) // 5
+        verify(orchestrator, times(3)).put(argThat { this == message }, any(), argThat { broadcastType == "type" }) // 5
     }
 
     @Test
-    fun `No found any subscriber`()
+    fun `Happy path to delivery to specific subscriber a message`()
+    {
+        val postwoman = PostwomanMessageService(
+            messageRepository, subscriberRepository, broadcastHandlerDealer, defaultMessageConfiguration, orchestrator
+        )
+
+        val message: Message = mock {
+            on { id } doReturn "id"
+            on { channel } doReturn "channel"
+            on { content } doReturn byteArrayOf()
+            on { publisher } doReturn Publisher("publisher")
+        }
+
+        postwoman.deliveryTo("id", message) // 4
+
+        verify(messageRepository, atLeastOnce()).save(argThat { this == message }) // 1
+        verify(subscriberRepository, atLeastOnce()).findById(argThat { this == "id" }) // 2
+        verify(orchestrator, times(1)).put(argThat { this == message }, any(), argThat { broadcastType == "type" }) // 5
+    }
+
+    @Test
+    fun `No found any subscriber in delivery`()
     {
         broadcast = mock {
             on { type } doReturn "one"
@@ -132,7 +157,7 @@ class PostwomanMessageServiceTest
         }
 
         val postwoman = PostwomanMessageService(
-            messageRepository, subscriberRepository, broadcastHandlerDealer, defaultMessageConfiguration
+            messageRepository, subscriberRepository, broadcastHandlerDealer, defaultMessageConfiguration, orchestrator
         )
 
         val message: Message = mock {
@@ -142,32 +167,16 @@ class PostwomanMessageServiceTest
             on { publisher } doReturn Publisher("publisher")
         }
 
-        assertThrows<NoFoundAnySubscriber> { postwoman.delivery(message) }
+        assertThrows<NotFoundAnySubscriber> { postwoman.delivery(message) }
 
-        verifyZeroInteractions(deliverer)
+        verifyZeroInteractions(orchestrator)
     }
 
     @Test
-    fun `Error to delivery a message`()
+    fun `No found any subscriber in delivery to id`()
     {
-        deliverer = mock {
-            on { delivery(any()) } doThrow DeliveryError("Test Error")
-        }
-
-        val subscribers = listOf(mockSubscriber("one", deliverer), mockSubscriber("two", deliverer))
-        val repeatTimes = subscribers.size * defaultMessageConfiguration.errorIntents!!
-
-        broadcast = mock {
-            on { type } doReturn "one"
-            on { select(any()) } doReturn subscribers
-        }
-
-        broadcastHandlerDealer = mock {
-            on { instance(any()) } doReturn broadcast
-        }
-
         val postwoman = PostwomanMessageService(
-            messageRepository, subscriberRepository, broadcastHandlerDealer, defaultMessageConfiguration
+            messageRepository, subscriberRepository, broadcastHandlerDealer, defaultMessageConfiguration, orchestrator
         )
 
         val message: Message = mock {
@@ -177,9 +186,9 @@ class PostwomanMessageServiceTest
             on { publisher } doReturn Publisher("publisher")
         }
 
-        assertThrows<DeliveryError> { postwoman.delivery(message) }
+        assertThrows<NotFoundAnySubscriber> { postwoman.deliveryTo("unknown", message) }
 
-        verify(deliverer, times(repeatTimes)).delivery(argThat { this == message })
+        verifyZeroInteractions(orchestrator)
     }
 
     //~ AfterEach ======================================================================================================

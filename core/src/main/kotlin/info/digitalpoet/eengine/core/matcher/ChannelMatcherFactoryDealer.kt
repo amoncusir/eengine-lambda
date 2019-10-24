@@ -1,14 +1,10 @@
-package info.digitalpoet.eengine.core.orchestrator
+package info.digitalpoet.eengine.core.matcher
 
-import info.digitalpoet.eengine.core.message.Message
-import info.digitalpoet.eengine.core.message.MessageConfiguration
-import info.digitalpoet.eengine.core.subscriber.Subscriber
-
-/** <!-- Documentation for: info.digitalpoet.eengine.core.orchestrator.ParallelFiFoQueueOrchestrator on 12/9/19 -->
+/** <!-- Documentation for: info.digitalpoet.eengine.core.matcher.ChannelMatcherFactoryDealer on 29/8/19 -->
  *
  * @author Aran Moncusí Ramírez
  */
-class ParallelFiFoQueueOrchestrator: Orchestrator
+class ChannelMatcherFactoryDealer(factories: List<ChannelMatcherFactory>, private val default: ChannelMatcherFactory)
 {
     //~ Constants ======================================================================================================
 
@@ -16,13 +12,15 @@ class ParallelFiFoQueueOrchestrator: Orchestrator
 
     //~ Properties =====================================================================================================
 
+    private val factories: Map<String, ChannelMatcherFactory> = factories.map { it.type to it }.toMap()
+
     //~ Constructors ===================================================================================================
 
     //~ Open Methods ===================================================================================================
 
-    override fun put(message: Message, subscriber: Subscriber, configuration: MessageConfiguration)
+    fun instance(type: String, data: Map<String, Any?>): ChannelMatcher
     {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return factories.getOrDefault(type, default).instance(data)
     }
 
     //~ Methods ========================================================================================================

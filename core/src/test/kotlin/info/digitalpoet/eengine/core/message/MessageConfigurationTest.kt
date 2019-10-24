@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test
  */
 class MessageConfigurationTest
 {
-    val defaultConfiguration = MessageConfiguration("type", 3, 3, "error", mapOf("one" to 1))
+    val defaultConfiguration = MessageConfiguration("type", mapOf("one" to 1))
 
     //~ BeforeAll ======================================================================================================
 
@@ -20,7 +20,7 @@ class MessageConfigurationTest
     @Test
     fun `Test merge static function with full configuration`()
     {
-        val fullConfig = MessageConfiguration("full", 0, 0, "full/error", mapOf("full" to "full"))
+        val fullConfig = MessageConfiguration("full", mapOf("full" to "full"))
 
         val merged = MessageConfiguration.merge(fullConfig, defaultConfiguration)
 
@@ -30,15 +30,12 @@ class MessageConfigurationTest
     @Test
     fun `Test merge static function with mid-fully configuration`()
     {
-        val midConfig = MessageConfiguration("mid", 0, null, null, null)
+        val midConfig = MessageConfiguration("mid", null)
 
         val merged = MessageConfiguration.merge(midConfig, defaultConfiguration)
 
         assertEquals(midConfig.broadcastType, merged.broadcastType)
-        assertEquals(midConfig.replyIntents, merged.replyIntents)
 
-        assertEquals(defaultConfiguration.errorIntents, merged.errorIntents)
-        assertEquals(defaultConfiguration.errorChannel, merged.errorChannel)
         assertEquals(defaultConfiguration.metadata, merged.metadata)
     }
 
@@ -49,9 +46,6 @@ class MessageConfigurationTest
         val merged = MessageConfiguration.merge(midConfig, defaultConfiguration)
 
         assertEquals(defaultConfiguration.broadcastType, merged.broadcastType)
-        assertEquals(defaultConfiguration.replyIntents, merged.replyIntents)
-        assertEquals(defaultConfiguration.errorIntents, merged.errorIntents)
-        assertEquals(defaultConfiguration.errorChannel, merged.errorChannel)
         assertEquals(defaultConfiguration.metadata, merged.metadata)
     }
 

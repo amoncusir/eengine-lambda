@@ -1,8 +1,8 @@
 package info.digitalpoet.eengine.http.repository
 
-import info.digitalpoet.eengine.core.message.ChannelMatcher
+import info.digitalpoet.eengine.core.matcher.ChannelMatcher
 import info.digitalpoet.eengine.core.message.Message
-import info.digitalpoet.eengine.core.message.StringChannelMatcher
+import info.digitalpoet.eengine.core.matcher.StringChannelMatcher
 import info.digitalpoet.eengine.core.repository.MessageRepository
 import mu.KotlinLogging
 
@@ -10,7 +10,11 @@ import mu.KotlinLogging
  *
  * @author Aran Moncusí Ramírez
  */
-class LoggerMessageRepository(private val errorMatcher: ChannelMatcher = StringChannelMatcher("error", true)):
+class LoggerMessageRepository(private val errorMatcher: ChannelMatcher = StringChannelMatcher(
+    "error",
+    true
+)
+):
     MessageRepository
 {
     //~ Constants ======================================================================================================

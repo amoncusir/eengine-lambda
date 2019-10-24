@@ -1,10 +1,11 @@
-package info.digitalpoet.eengine.core.message
+package info.digitalpoet.eengine.core.matcher
 
-/** <!-- Documentation for: info.digitalpoet.eengine.core.message.StringChannelMatcher on 8/9/19 -->
+/** <!-- Documentation for: info.digitalpoet.eengine.core.matcher.StringChannelMatcher on 8/9/19 -->
  *
  * @author Aran Moncusí Ramírez
  */
-class StringChannelMatcher(private val keyword: String, private val ignoreCase: Boolean = false): ChannelMatcher
+class StringChannelMatcher(private val keyword: String, private val ignoreCase: Boolean = false):
+    ChannelMatcher
 {
     companion object
     {
@@ -21,7 +22,9 @@ class StringChannelMatcher(private val keyword: String, private val ignoreCase: 
             val keyword = data["keyword"] as String
             val ignoreCase = data["ignoreCase"] as? Boolean
 
-            return ignoreCase?.let { StringChannelMatcher(keyword, it) } ?: StringChannelMatcher(keyword)
+            return ignoreCase?.let {
+                StringChannelMatcher(keyword, it)
+            } ?: StringChannelMatcher(keyword)
         }
     }
 

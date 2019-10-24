@@ -1,9 +1,9 @@
-package info.digitalpoet.eengine.core.subscriber
+package info.digitalpoet.eengine.core.deliverer
 
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
-import info.digitalpoet.eengine.core.NoRetryError
+import info.digitalpoet.eengine.core.EEngineError
 import info.digitalpoet.eengine.core.deliverer.DelivererFactory
 import info.digitalpoet.eengine.core.deliverer.DelivererFactoryDealer
 import org.hamcrest.MatcherAssert.assertThat
@@ -13,7 +13,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
-/** <!-- Documentation for: info.digitalpoet.eengine.core.subscriber.DelivererFactoryDealTest on 9/9/19 -->
+/** <!-- Documentation for: info.digitalpoet.eengine.core.deliverer.DelivererFactoryDealTest on 9/9/19 -->
  *
  * @author Aran Moncusí Ramírez
  */
@@ -62,7 +62,7 @@ class DelivererFactoryDealTest
     {
         val dealer = DelivererFactoryDealer(mockedFactories!!)
 
-        assertThrows<NoRetryError> { dealer.instance("unknown", mapOf<String, Any?>()) }
+        assertThrows<EEngineError> { dealer.instance("unknown", mapOf<String, Any?>()) }
     }
 
     //~ AfterEach ======================================================================================================

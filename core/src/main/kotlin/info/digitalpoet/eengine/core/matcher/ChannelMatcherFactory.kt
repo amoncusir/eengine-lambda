@@ -1,6 +1,6 @@
-package info.digitalpoet.eengine.core.message
+package info.digitalpoet.eengine.core.matcher
 
-/** <!-- Documentation for: info.digitalpoet.eengine.core.message.ChannelMatcherFactory on 29/8/19 -->
+/** <!-- Documentation for: info.digitalpoet.eengine.core.matcher.ChannelMatcherFactory on 29/8/19 -->
  *
  * Factory implementation for class `ChannelMatcher`
  *

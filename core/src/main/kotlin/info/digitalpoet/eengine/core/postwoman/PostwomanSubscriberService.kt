@@ -1,7 +1,7 @@
 package info.digitalpoet.eengine.core.postwoman
 
-import info.digitalpoet.eengine.core.message.ChannelMatcher
-import info.digitalpoet.eengine.core.message.ChannelMatcherFactoryDealer
+import info.digitalpoet.eengine.core.matcher.ChannelMatcher
+import info.digitalpoet.eengine.core.matcher.ChannelMatcherFactoryDealer
 import info.digitalpoet.eengine.core.repository.SubscriberRepository
 import info.digitalpoet.eengine.core.service.SubscriberPetition
 import info.digitalpoet.eengine.core.service.SubscriberService

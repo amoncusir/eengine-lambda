@@ -1,13 +1,12 @@
-package info.digitalpoet.eengine.core.message
+package info.digitalpoet.eengine.core.matcher
 
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
-import org.hamcrest.Matchers
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import java.util.UUID
 
-/** <!-- Documentation for: info.digitalpoet.eengine.core.message.RegexChannelMatcherTest on 9/9/19 -->
+/** <!-- Documentation for: info.digitalpoet.eengine.core.matcher.RegexChannelMatcherTest on 9/9/19 -->
  *
  * @author Aran Moncusí Ramírez
  */

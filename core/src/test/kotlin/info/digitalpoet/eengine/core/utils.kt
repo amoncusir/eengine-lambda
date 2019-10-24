@@ -3,7 +3,7 @@ package info.digitalpoet.eengine.core
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
-import info.digitalpoet.eengine.core.message.ChannelMatcher
+import info.digitalpoet.eengine.core.matcher.ChannelMatcher
 import info.digitalpoet.eengine.core.deliverer.Deliverer
 import info.digitalpoet.eengine.core.subscriber.Service
 import info.digitalpoet.eengine.core.subscriber.Subscriber

@@ -55,9 +55,7 @@ open class PostwomanMessageService(
         }
         else
         {
-            logger.error { "Not found any subscriber for message: $message with broadcast: ${broadcastHandler.type}" }
-
-            throw NoFoundAnySubscriber("In channel: ${message.channel} with broadcast: ${broadcastHandler.type}")
+            throwErrorNotFoundSubscriber("Not found any subscriber by broadcast: ${broadcastHandler.type}", message)
         }
     }
 
@@ -69,7 +67,7 @@ open class PostwomanMessageService(
 
         val configuration = MessageConfiguration.merge(message.configuration, defaultMessageConfiguration)
         val subscriber = subscriberRepository.findById(subscriberId) ?:
-                throw NoFoundAnySubscriber("Not found any subscriber by id: $subscriberId")
+            throwErrorNotFoundSubscriber("Not found any subscriber by id: $subscriberId", message)
 
         orchestrator.put(message, subscriber, configuration)
     }
@@ -84,6 +82,13 @@ open class PostwomanMessageService(
     protected open fun findServices(channel: String): List<Service>
     {
         return subscriberRepository.findByChannel(channel)
+    }
+
+    protected fun throwErrorNotFoundSubscriber(text: String, message: Message): Nothing
+    {
+        logger.error { "NotFoundAnySubscriber: $text - with message: $message" }
+
+        throw NotFoundAnySubscriber(text)
     }
 
     //~ Operators ======================================================================================================
