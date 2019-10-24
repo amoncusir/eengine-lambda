@@ -61,7 +61,7 @@ class AsyncOrchestratorTest
         val tryDeliveryDelegate = TryDeliveryDelegateMock(true to null)
         val deliverer = DelivererMock()
         val subscriber: Subscriber = mockSubscriber("id", deliverer)
-        val orchestrator = AsyncOrchestrator(errorMessageDelegate, tryDeliveryDelegate, CoroutineScope(Job()))
+        val orchestrator = AsyncOrchestrator(errorMessageDelegate, tryDeliveryDelegate)
 
         for (i in 0..100)
         {
@@ -69,7 +69,7 @@ class AsyncOrchestratorTest
         }
 
         runBlocking {
-            delay(100)
+//            delay(100)
             job.cancelAndJoin()
 
             println(deliverer.args)
