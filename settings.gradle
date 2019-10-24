@@ -5,16 +5,6 @@
 // Define all contracts
 include(":core")
 
-// Define all dependencies and configurations
-include(":configuration")
-
-// Implement all contracts
-include(":aws")
-include(":fanout")
-include(":services")
-include(":security")
-
-// Manage the source. The context
-include(":manager")
+include(":http")
 
 rootProject.name = 'EEngine'
