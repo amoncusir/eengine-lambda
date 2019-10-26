@@ -8,23 +8,19 @@ import info.digitalpoet.eengine.core.message.Message
 import info.digitalpoet.eengine.core.message.MessageConfiguration
 import info.digitalpoet.eengine.core.mockSubscriber
 import info.digitalpoet.eengine.core.subscriber.Subscriber
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.async
 import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.newCoroutineContext
-import kotlinx.coroutines.plus
 import kotlinx.coroutines.runBlocking
-import org.hamcrest.CoreMatchers
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.CoreMatchers.not
-import org.hamcrest.MatcherAssert
 import org.hamcrest.MatcherAssert.assertThat
+import org.hamcrest.Matchers
+import org.hamcrest.Matchers.greaterThan
 import org.junit.jupiter.api.Test
 import kotlin.random.Random
 
@@ -32,7 +28,7 @@ import kotlin.random.Random
  *
  * @author Aran Moncusí Ramírez
  */
-class AsyncOrchestratorTest
+class CoroutineOrchestratorTest
 {
     internal class TryDeliveryDelegateMock(val result: Pair<Boolean, Throwable?>): TryDeliveryDelegate
     {
@@ -49,7 +45,7 @@ class AsyncOrchestratorTest
     {
         override suspend fun delivery(message: Message)
         {
-            delay(Random.nextLong(10, 30))
+            delay(100)
             args.add(args.size to message.id.toInt())
         }
     }
@@ -62,18 +58,19 @@ class AsyncOrchestratorTest
 
     @Test
     fun `test coroutines delivery`() = runBlocking {
+
         val configuration = MessageConfiguration("type")
         val errorMessageDelegate: ErrorMessageDelegate = mock {  }
         val tryDeliveryDelegate = TryDeliveryDelegateMock(true to null)
         val deliverer = DelivererMock()
         val subscriber: Subscriber = mockSubscriber("id", deliverer)
 
-        val request = CoroutineScope(Dispatchers.IO).launch {
-            val orchestrator = AsyncOrchestrator(errorMessageDelegate, tryDeliveryDelegate, this)
+        val request = CoroutineScope(Dispatchers.IO).async {
+            val orchestrator = CoroutineOrchestrator(errorMessageDelegate, tryDeliveryDelegate, this)
 
             for (i in 0..100)
             {
-                orchestrator.put(Message("$i", "channel-$i", byteArrayOf(), mock {}, mock {}), subscriber, configuration)
+                orchestrator.put(Message("$i", "chan-$i", byteArrayOf(), mock {}, mock {}), subscriber, configuration)
             }
         }
 
@@ -84,6 +81,7 @@ class AsyncOrchestratorTest
         val asyncPuts = deliverer.args.filter { (a, b) -> a == b }.size
 
         assertThat(asyncPuts, not(equalTo(deliverer.args.size)))
+        assertThat(deliverer.args.size, greaterThan(0))
     }
 
     //~ AfterEach ======================================================================================================

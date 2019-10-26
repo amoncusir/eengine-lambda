@@ -15,7 +15,7 @@ import kotlinx.coroutines.runBlocking
  *
  * @author Aran Moncusí Ramírez
  */
-class AsyncOrchestrator(
+class CoroutineOrchestrator(
     private val errorMessageDelegate: ErrorMessageDelegate,
     private val tryDeliveryDelegate: TryDeliveryDelegate,
     private val scope: CoroutineScope = CoroutineScope(Dispatchers.IO)
@@ -34,7 +34,6 @@ class AsyncOrchestrator(
 
     override fun put(message: Message, subscriber: Subscriber, configuration: MessageConfiguration)
     {
-        
         scope.launch {
             process(message, subscriber, configuration)
         }
