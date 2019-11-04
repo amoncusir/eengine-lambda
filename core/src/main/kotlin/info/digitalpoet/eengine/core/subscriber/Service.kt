@@ -2,7 +2,9 @@ package info.digitalpoet.eengine.core.subscriber
 
 /** <!-- Documentation for: info.digitalpoet.eengine.core.subscriber.Service on 29/8/19 -->
  *
- * The services will be created when published message find your subscribers
+ * The services will be created when published message find your subscribers.
+ *
+ * Any manager represents a collection of subscribers.
  *
  * @author Aran Moncusí Ramírez
  */

@@ -6,9 +6,9 @@ package info.digitalpoet.eengine.core.matcher
  *
  * @author Aran Moncusí Ramírez
  */
-interface ChannelMatcherFactory
+interface MessageMatcherFactory
 {
     val type: String
 
-    fun instance(data: Map<String, Any?>): ChannelMatcher
+    fun instance(data: Map<String, Any?>): MessageMatcher
 }

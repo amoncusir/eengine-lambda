@@ -29,10 +29,8 @@ class OnCachedSubscriberRepositoryTest
     fun prepare()
     {
         val subscribers = listOf(mockSubscriber("sub-one"), mockSubscriber("sub-two"), mockSubscriber("sub-three"))
-        val services = listOf(mockService("service-one"), mockService("service-two"), mockService("service-three"))
 
         mockedRepo = mock {
-            on { findByChannel(eq("channel")) } doReturn services
             on { getAllSubscribers() } doReturn subscribers
         }
     }
@@ -49,24 +47,6 @@ class OnCachedSubscriberRepositoryTest
         repository.save(mock {})
 
         verify(mockedRepo, times(1)).save(argThat { MockUtil.isMock(this) })
-
-        // findByChannel method with known channel
-
-        val channelSubscriber = repository.findByChannel("sub-one")
-
-        verify(mockedRepo, times(1)).getAllSubscribers()
-
-        assertEquals(1, channelSubscriber.size)
-        assertEquals("service-sub-one", channelSubscriber.first().id) //Service.id
-        assertEquals("sub-one", channelSubscriber.first().subscribers.first().id) //Subscriber.id
-
-        // findByChannel method with unknown channel
-
-        val unknownSubscriber = repository.findByChannel("unknown")
-
-        verify(mockedRepo, times(1)).getAllSubscribers()
-
-        assert(unknownSubscriber.isEmpty())
 
         // getAllSubscribers method
 

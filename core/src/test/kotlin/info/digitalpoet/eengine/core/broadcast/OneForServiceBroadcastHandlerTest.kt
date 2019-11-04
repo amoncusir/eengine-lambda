@@ -21,7 +21,7 @@ class OneForServiceBroadcastHandlerTest
     @BeforeEach
     fun prepare()
     {
-        services = listOf(mockService("service-one"), mockService("service-two"), mockService("service-three"))
+        services = listOf(mockService("manager-one"), mockService("manager-two"), mockService("manager-three"))
     }
 
     //~ Tests ==========================================================================================================

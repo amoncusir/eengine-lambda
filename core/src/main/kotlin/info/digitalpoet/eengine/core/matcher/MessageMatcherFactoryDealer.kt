@@ -4,7 +4,7 @@ package info.digitalpoet.eengine.core.matcher
  *
  * @author Aran Moncusí Ramírez
  */
-class ChannelMatcherFactoryDealer(factories: List<ChannelMatcherFactory>, private val default: ChannelMatcherFactory)
+class MessageMatcherFactoryDealer(factories: List<MessageMatcherFactory>, private val default: MessageMatcherFactory)
 {
     //~ Constants ======================================================================================================
 
@@ -12,13 +12,13 @@ class ChannelMatcherFactoryDealer(factories: List<ChannelMatcherFactory>, privat
 
     //~ Properties =====================================================================================================
 
-    private val factories: Map<String, ChannelMatcherFactory> = factories.map { it.type to it }.toMap()
+    private val factories: Map<String, MessageMatcherFactory> = factories.map { it.type to it }.toMap()
 
     //~ Constructors ===================================================================================================
 
     //~ Open Methods ===================================================================================================
 
-    fun instance(type: String, data: Map<String, Any?>): ChannelMatcher
+    fun instance(type: String, data: Map<String, Any?>): MessageMatcher
     {
         return factories.getOrDefault(type, default).instance(data)
     }

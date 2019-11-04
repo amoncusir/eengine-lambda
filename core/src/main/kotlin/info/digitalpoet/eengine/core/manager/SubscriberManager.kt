@@ -2,7 +2,7 @@ package info.digitalpoet.eengine.core.service
 
 import info.digitalpoet.eengine.core.subscriber.Subscriber
 
-/** <!-- Documentation for: info.digitalpoet.eengine.core.service.SubscriberService on 29/8/19 -->
+/** <!-- Documentation for: info.digitalpoet.eengine.core.manager.SubscriberService on 29/8/19 -->
  *
  * @author Aran Moncusí Ramírez
  */
@@ -15,11 +15,11 @@ data class SubscriberPetition(
     val delivererConfig: Map<String, Any?>
 )
 
-/** <!-- Documentation for: info.digitalpoet.eengine.core.service.SubscriberService on 29/8/19 -->
+/** <!-- Documentation for: info.digitalpoet.eengine.core.manager.SubscriberService on 29/8/19 -->
  *
  * @author Aran Moncusí Ramírez
  */
-interface SubscriberService
+interface SubscriberManager
 {
     fun createSubscriber(petition: SubscriberPetition)
 

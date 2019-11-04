@@ -1,12 +1,13 @@
 package info.digitalpoet.eengine.core.postwoman
 
 import info.digitalpoet.eengine.core.broadcast.BroadcastHandlerDealer
+import info.digitalpoet.eengine.core.manager.ServiceManager
 import info.digitalpoet.eengine.core.message.Message
 import info.digitalpoet.eengine.core.message.MessageConfiguration
 import info.digitalpoet.eengine.core.orchestrator.Orchestrator
 import info.digitalpoet.eengine.core.repository.MessageRepository
 import info.digitalpoet.eengine.core.repository.SubscriberRepository
-import info.digitalpoet.eengine.core.service.MessageService
+import info.digitalpoet.eengine.core.service.MessageManager
 import info.digitalpoet.eengine.core.subscriber.Service
 import mu.KotlinLogging
 
@@ -15,13 +16,14 @@ import mu.KotlinLogging
  * @author Aran Moncusí Ramírez
  */
 open class PostwomanMessageService(
+    private val serviceManager: ServiceManager,
     private val messageRepository: MessageRepository,
     private val subscriberRepository: SubscriberRepository,
     private val broadcastHandlerDealer: BroadcastHandlerDealer,
     private val defaultMessageConfiguration: MessageConfiguration,
     private val orchestrator: Orchestrator
 ):
-    MessageService
+    MessageManager
 {
     //~ Constants ======================================================================================================
 
@@ -42,7 +44,7 @@ open class PostwomanMessageService(
         saveMessage(message)
 
         val configuration = MessageConfiguration.merge(message.configuration, defaultMessageConfiguration)
-        val services = findServices(message.channel)
+        val services = findServices(message)
         val broadcastHandler = broadcastHandlerDealer.instance(configuration.broadcastType!!)
         val subscribers = broadcastHandler.select(services)
 
@@ -79,12 +81,12 @@ open class PostwomanMessageService(
         messageRepository.save(message);
     }
 
-    protected open fun findServices(channel: String): List<Service>
+    protected open fun findServices(message: Message): List<Service>
     {
-        return subscriberRepository.findByChannel(channel)
+        return serviceManager.findServices(message)
     }
 
-    protected fun throwErrorNotFoundSubscriber(text: String, message: Message): Nothing
+    private fun throwErrorNotFoundSubscriber(text: String, message: Message): Nothing
     {
         logger.error { "NotFoundAnySubscriber: $text - with message: $message" }
 
