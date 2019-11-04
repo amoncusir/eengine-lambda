@@ -10,7 +10,7 @@ import kotlin.random.Random
  */
 class OneForServiceBroadcastHandler: BroadcastHandler
 {
-    override val type: String = "one-for-service"
+    override val type: String = "one-for-manager"
 
     override fun select(services: List<Service>): List<Subscriber>
     {

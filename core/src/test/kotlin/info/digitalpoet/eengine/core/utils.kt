@@ -1,10 +1,10 @@
 package info.digitalpoet.eengine.core
 
+import com.nhaarman.mockitokotlin2.argWhere
 import com.nhaarman.mockitokotlin2.doReturn
-import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
 import info.digitalpoet.eengine.core.deliverer.Deliverer
-import info.digitalpoet.eengine.core.matcher.ChannelMatcher
+import info.digitalpoet.eengine.core.matcher.MessageMatcher
 import info.digitalpoet.eengine.core.subscriber.Service
 import info.digitalpoet.eengine.core.subscriber.Subscriber
 
@@ -19,12 +19,12 @@ fun mockService(id: String): Service
 
 fun mockSubscriber(id: String, deliverer: Deliverer = mock {}): Subscriber
 {
-    return Subscriber(id, "service-$id", mockChanelMatcher(id), deliverer)
+    return Subscriber(id, "manager-$id", mockChanelMatcher(id), deliverer)
 }
 
-fun mockChanelMatcher(channel: String): ChannelMatcher
+fun mockChanelMatcher(channel: String): MessageMatcher
 {
     return mock {
-        on { match(eq(channel)) } doReturn true
+        on { match(argWhere { it.channel == channel }) } doReturn true
     }
 }

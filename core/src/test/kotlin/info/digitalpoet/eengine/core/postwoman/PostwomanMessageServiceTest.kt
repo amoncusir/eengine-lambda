@@ -2,6 +2,7 @@ package info.digitalpoet.eengine.core.postwoman
 
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.argThat
+import com.nhaarman.mockitokotlin2.argWhere
 import com.nhaarman.mockitokotlin2.atLeastOnce
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.eq
@@ -12,6 +13,7 @@ import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import info.digitalpoet.eengine.core.broadcast.BroadcastHandler
 import info.digitalpoet.eengine.core.broadcast.BroadcastHandlerDealer
 import info.digitalpoet.eengine.core.deliverer.Deliverer
+import info.digitalpoet.eengine.core.manager.ServiceManager
 import info.digitalpoet.eengine.core.message.Message
 import info.digitalpoet.eengine.core.message.MessageConfiguration
 import info.digitalpoet.eengine.core.mockService
@@ -36,6 +38,8 @@ class PostwomanMessageServiceTest
 
     lateinit var message: Message
 
+    lateinit var serviceManager: ServiceManager
+
     lateinit var broadcast: BroadcastHandler
 
     lateinit var messageRepository: MessageRepository
@@ -55,7 +59,7 @@ class PostwomanMessageServiceTest
     {
         deliverer = mock {}
 
-        val services = listOf(mockService("service-one"), mockService("service-two"), mockService("service-three"))
+        val services = listOf(mockService("manager-one"), mockService("manager-two"), mockService("manager-three"))
         val subscribers = listOf(
             mockSubscriber("sub-one", deliverer),
             mockSubscriber("sub-two", deliverer),
@@ -69,6 +73,10 @@ class PostwomanMessageServiceTest
             on { publisher } doReturn Publisher("publisher")
         }
 
+        serviceManager = mock {
+            on { findServices(argWhere { it.channel == "channel" }) } doReturn services
+        }
+
         broadcast = mock {
             on { type } doReturn "one"
             on { select(any()) } doReturn subscribers
@@ -80,7 +88,7 @@ class PostwomanMessageServiceTest
 
         subscriberRepository = mock {
             on { findById(eq("id")) } doReturn subscribers.first()
-            on { findByChannel(eq("channel")) } doReturn services
+//            on { findByChannel(eq("channel")) } doReturn services
             on { getAllSubscribers() } doReturn subscribers
         }
 
@@ -97,7 +105,8 @@ class PostwomanMessageServiceTest
     fun `Happy path to delivery a message`()
     {
         val postwoman = PostwomanMessageService(
-            messageRepository, subscriberRepository, broadcastHandlerDealer, defaultMessageConfiguration, orchestrator
+            serviceManager, messageRepository, subscriberRepository, broadcastHandlerDealer,
+            defaultMessageConfiguration, orchestrator
         )
 
         val message: Message = mock {
@@ -117,7 +126,7 @@ class PostwomanMessageServiceTest
         //! 5. Put to orchestrator
 
         verify(messageRepository, atLeastOnce()).save(argThat { this == message }) // 1
-        verify(subscriberRepository, atLeastOnce()).findByChannel(argThat { this == "channel" }) // 2
+        verify(serviceManager, atLeastOnce()).findServices(argThat { channel == "channel" }) // 2
         verify(broadcastHandlerDealer, atLeastOnce()).instance(argThat { this == "type" }) // Before 3
         verify(broadcast, atLeastOnce()).select(argThat { size == 3 }) // 3
         verify(orchestrator, times(3)).put(argThat { this == message }, any(), argThat { broadcastType == "type" }) // 5
@@ -127,7 +136,8 @@ class PostwomanMessageServiceTest
     fun `Happy path to delivery to specific subscriber a message`()
     {
         val postwoman = PostwomanMessageService(
-            messageRepository, subscriberRepository, broadcastHandlerDealer, defaultMessageConfiguration, orchestrator
+            serviceManager, messageRepository, subscriberRepository, broadcastHandlerDealer,
+            defaultMessageConfiguration, orchestrator
         )
 
         val message: Message = mock {
@@ -157,7 +167,8 @@ class PostwomanMessageServiceTest
         }
 
         val postwoman = PostwomanMessageService(
-            messageRepository, subscriberRepository, broadcastHandlerDealer, defaultMessageConfiguration, orchestrator
+            serviceManager, messageRepository, subscriberRepository, broadcastHandlerDealer,
+            defaultMessageConfiguration, orchestrator
         )
 
         val message: Message = mock {
@@ -176,7 +187,8 @@ class PostwomanMessageServiceTest
     fun `No found any subscriber in delivery to id`()
     {
         val postwoman = PostwomanMessageService(
-            messageRepository, subscriberRepository, broadcastHandlerDealer, defaultMessageConfiguration, orchestrator
+            serviceManager, messageRepository, subscriberRepository, broadcastHandlerDealer,
+            defaultMessageConfiguration, orchestrator
         )
 
         val message: Message = mock {

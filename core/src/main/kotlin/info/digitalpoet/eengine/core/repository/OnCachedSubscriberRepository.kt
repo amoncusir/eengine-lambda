@@ -1,6 +1,5 @@
 package info.digitalpoet.eengine.core.repository
 
-import info.digitalpoet.eengine.core.subscriber.Service
 import info.digitalpoet.eengine.core.subscriber.Subscriber
 import java.util.Date
 
@@ -22,16 +21,6 @@ open class OnCachedSubscriberRepository(
     override fun save(subscriber: Subscriber)
     {
         persistentRepository.save(subscriber)
-    }
-
-    override fun findByChannel(channel: String): List<Service>
-    {
-        if (needRefresh()) updateSubscribers()
-
-        return subscribers
-            .filter { it.channelMatcher.match(channel) }
-            .groupBy { it.serviceId }
-            .map { Service(it.key, it.value) }
     }
 
     override fun findById(subscriberId: String): Subscriber?

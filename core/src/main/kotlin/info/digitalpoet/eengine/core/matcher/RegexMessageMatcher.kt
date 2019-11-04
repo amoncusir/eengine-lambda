@@ -1,27 +1,29 @@
 package info.digitalpoet.eengine.core.matcher
 
+import info.digitalpoet.eengine.core.message.Message
+
 /** <!-- Documentation for: info.digitalpoet.eengine.core.matcher.RegexChannelMatcher on 8/9/19 -->
  *
  * @author Aran Moncusí Ramírez
  */
-class RegexChannelMatcher(private val regex: Regex): ChannelMatcher
+class RegexMessageMatcher(private val regex: Regex): MessageMatcher
 {
     companion object
     {
         const val TYPE = "regex"
     }
 
-    class Factory: ChannelMatcherFactory
+    class Factory: MessageMatcherFactory
     {
         override val type = TYPE
 
         @Suppress("UNCHECKED_CAST")
-        override fun instance(data: Map<String, Any?>): ChannelMatcher
+        override fun instance(data: Map<String, Any?>): MessageMatcher
         {
             val regexFormula = data["regex"] as String
             val options = getOptions(data.getOrDefault("options", listOf<String>()) as List<String>)
 
-            return RegexChannelMatcher(Regex(regexFormula, options))
+            return RegexMessageMatcher(Regex(regexFormula, options))
         }
 
         private fun getOptions(options: List<String>): Set<RegexOption>
@@ -32,5 +34,5 @@ class RegexChannelMatcher(private val regex: Regex): ChannelMatcher
         }
     }
 
-    override fun match(channel: String): Boolean = regex.matches(channel)
+    override fun match(message: Message): Boolean = regex.matches(message.channel)
 }

@@ -8,8 +8,8 @@ import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import info.digitalpoet.eengine.core.deliverer.Deliverer
 import info.digitalpoet.eengine.core.deliverer.DelivererFactoryDealer
-import info.digitalpoet.eengine.core.matcher.ChannelMatcher
-import info.digitalpoet.eengine.core.matcher.ChannelMatcherFactoryDealer
+import info.digitalpoet.eengine.core.matcher.MessageMatcher
+import info.digitalpoet.eengine.core.matcher.MessageMatcherFactoryDealer
 import info.digitalpoet.eengine.core.repository.SubscriberRepository
 import info.digitalpoet.eengine.core.service.SubscriberPetition
 import info.digitalpoet.eengine.core.subscriber.Subscriber
@@ -28,7 +28,7 @@ class PostwomanSubscriberServiceTest
 {
     lateinit var subscriberRepository: SubscriberRepository
 
-    lateinit var chanelMatcherFactoryDealer: ChannelMatcherFactoryDealer
+    lateinit var chanelMatcherFactoryDealer: MessageMatcherFactoryDealer
 
     lateinit var delivererFactoryDealer: DelivererFactoryDealer
 
@@ -43,7 +43,7 @@ class PostwomanSubscriberServiceTest
             on { id } doReturn "id"
         }
 
-        val channelMatcher: ChannelMatcher = mock {}
+        val matcher: MessageMatcher = mock {}
 
         val deliverer: Deliverer = mock {}
 
@@ -52,7 +52,7 @@ class PostwomanSubscriberServiceTest
         }
 
         chanelMatcherFactoryDealer = mock {
-            on { instance(any(), any()) } doReturn channelMatcher
+            on { instance(any(), any()) } doReturn matcher
         }
 
         delivererFactoryDealer = mock {
@@ -79,7 +79,7 @@ class PostwomanSubscriberServiceTest
         ))
 
         verify(subscriberRepository, times(1)).save(argThat {
-            serviceId == "serviceId" && MockUtil.isMock(channelMatcher) && MockUtil.isMock(deliverer)
+            serviceId == "serviceId" && MockUtil.isMock(messageMatcher) && MockUtil.isMock(deliverer)
         })
     }
 

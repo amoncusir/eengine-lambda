@@ -15,9 +15,9 @@ import org.junit.jupiter.api.Test
  */
 class ChannelMatcherFactoryDealerTest
 {
-    lateinit var factories: List<ChannelMatcherFactory>
+    lateinit var factories: List<MessageMatcherFactory>
 
-    lateinit var defaultFactory: ChannelMatcherFactory
+    lateinit var defaultFactory: MessageMatcherFactory
 
     //~ BeforeAll ======================================================================================================
 
@@ -54,23 +54,23 @@ class ChannelMatcherFactoryDealerTest
     @Test
     fun `ChannelMatcherFactoryDealer instance method with known type`()
     {
-        val dealer = ChannelMatcherFactoryDealer(factories, defaultFactory)
+        val dealer = MessageMatcherFactoryDealer(factories, defaultFactory)
         val instance = dealer.instance("two", mock {})
 
         verify(factories[1], times(1)).instance(any())
 
-        assert(instance.match("channel"))
+        assert(instance.match(mock { on { channel } doReturn "channel" }))
     }
 
     @Test
     fun `ChannelMatcherFactoryDealer instance method without known type`()
     {
-        val dealer = ChannelMatcherFactoryDealer(factories, defaultFactory)
+        val dealer = MessageMatcherFactoryDealer(factories, defaultFactory)
         val instance = dealer.instance("unknown", mock {})
 
         verify(defaultFactory, times(1)).instance(any())
 
-        assert(instance.match("channel"))
+        assert(instance.match(mock { on { channel } doReturn "channel" }))
     }
 
     //~ AfterEach ======================================================================================================

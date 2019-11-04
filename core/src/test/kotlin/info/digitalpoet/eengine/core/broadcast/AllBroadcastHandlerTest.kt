@@ -27,7 +27,7 @@ class AllBroadcastHandlerTest
     @Test
     fun `Test AllBroadcastHandler implementation`()
     {
-        val services = listOf(mockService("service-one"), mockService("service-two"), mockService("service-three"))
+        val services = listOf(mockService("manager-one"), mockService("manager-two"), mockService("manager-three"))
         val broadcast = AllBroadcastHandler()
         val subscribers = broadcast.select(services)
 

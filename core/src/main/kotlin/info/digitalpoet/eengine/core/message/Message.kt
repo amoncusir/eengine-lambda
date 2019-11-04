@@ -11,7 +11,7 @@ data class Message(
     val channel: String,
     val content: ByteArray,
     val publisher: Publisher,
-    val configuration: MessageConfiguration?
+    val configuration: MessageConfiguration? = null
 )
 {
     override fun equals(other: Any?): Boolean
