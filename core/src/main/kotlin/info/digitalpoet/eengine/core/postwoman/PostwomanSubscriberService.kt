@@ -1,12 +1,12 @@
 package info.digitalpoet.eengine.core.postwoman
 
+import info.digitalpoet.eengine.core.deliverer.Deliverer
+import info.digitalpoet.eengine.core.deliverer.DelivererFactoryDealer
 import info.digitalpoet.eengine.core.matcher.ChannelMatcher
 import info.digitalpoet.eengine.core.matcher.ChannelMatcherFactoryDealer
 import info.digitalpoet.eengine.core.repository.SubscriberRepository
 import info.digitalpoet.eengine.core.service.SubscriberPetition
 import info.digitalpoet.eengine.core.service.SubscriberService
-import info.digitalpoet.eengine.core.deliverer.Deliverer
-import info.digitalpoet.eengine.core.deliverer.DelivererFactoryDealer
 import info.digitalpoet.eengine.core.subscriber.Subscriber
 import mu.KotlinLogging
 

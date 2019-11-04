@@ -10,19 +10,14 @@ import info.digitalpoet.eengine.core.mockSubscriber
 import info.digitalpoet.eengine.core.subscriber.Subscriber
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
-import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.CoreMatchers.not
 import org.hamcrest.MatcherAssert.assertThat
-import org.hamcrest.Matchers
 import org.hamcrest.Matchers.greaterThan
 import org.junit.jupiter.api.Test
-import kotlin.random.Random
 
 /** <!-- Documentation for: info.digitalpoet.eengine.core.orchestrator.AsyncOrchestratorTest on 14/9/19 -->
  *

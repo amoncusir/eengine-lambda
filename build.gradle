@@ -8,7 +8,6 @@ buildscript {
     repositories {
         mavenCentral()
         jcenter()
-
         maven { url "https://plugins.gradle.org/m2/" }
     }
 
@@ -33,8 +32,10 @@ configure(subprojects) {
      * Intensive clean task (delete generated files) NOTE: When run this task, the first time that old_build project
      * not work. Need run 2 times or old_build first run springBoot task
      */
-    clean << {
-        delete "./out"
+    clean {
+        doLast {
+            delete "./out"
+        }
     }
 }
 

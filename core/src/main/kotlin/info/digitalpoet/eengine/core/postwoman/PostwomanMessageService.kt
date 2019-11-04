@@ -1,9 +1,9 @@
 package info.digitalpoet.eengine.core.postwoman
 
 import info.digitalpoet.eengine.core.broadcast.BroadcastHandlerDealer
-import info.digitalpoet.eengine.core.orchestrator.Orchestrator
 import info.digitalpoet.eengine.core.message.Message
 import info.digitalpoet.eengine.core.message.MessageConfiguration
+import info.digitalpoet.eengine.core.orchestrator.Orchestrator
 import info.digitalpoet.eengine.core.repository.MessageRepository
 import info.digitalpoet.eengine.core.repository.SubscriberRepository
 import info.digitalpoet.eengine.core.service.MessageService

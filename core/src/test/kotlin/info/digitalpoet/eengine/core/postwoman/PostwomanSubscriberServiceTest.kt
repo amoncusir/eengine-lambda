@@ -7,15 +7,12 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import info.digitalpoet.eengine.core.deliverer.Deliverer
-import info.digitalpoet.eengine.core.deliverer.DelivererFactory
 import info.digitalpoet.eengine.core.deliverer.DelivererFactoryDealer
 import info.digitalpoet.eengine.core.matcher.ChannelMatcher
-import info.digitalpoet.eengine.core.matcher.ChannelMatcherFactory
 import info.digitalpoet.eengine.core.matcher.ChannelMatcherFactoryDealer
 import info.digitalpoet.eengine.core.repository.SubscriberRepository
 import info.digitalpoet.eengine.core.service.SubscriberPetition
 import info.digitalpoet.eengine.core.subscriber.Subscriber
-import jdk.nashorn.internal.runtime.regexp.joni.MatcherFactory
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.equalTo
 import org.hamcrest.Matchers.hasSize

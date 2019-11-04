@@ -5,8 +5,6 @@ import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
-import info.digitalpoet.eengine.core.matcher.ChannelMatcherFactory
-import info.digitalpoet.eengine.core.matcher.ChannelMatcherFactoryDealer
 import info.digitalpoet.eengine.core.mockChanelMatcher
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

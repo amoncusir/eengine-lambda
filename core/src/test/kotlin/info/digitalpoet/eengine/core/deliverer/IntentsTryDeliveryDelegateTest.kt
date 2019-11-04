@@ -7,7 +7,6 @@ import com.nhaarman.mockitokotlin2.verify
 import kotlinx.coroutines.runBlocking
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.CoreMatchers.instanceOf
-import org.hamcrest.CoreMatchers.isA
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.jupiter.api.Test
 

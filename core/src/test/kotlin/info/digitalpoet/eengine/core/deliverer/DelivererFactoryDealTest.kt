@@ -4,8 +4,6 @@ import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import info.digitalpoet.eengine.core.EEngineError
-import info.digitalpoet.eengine.core.deliverer.DelivererFactory
-import info.digitalpoet.eengine.core.deliverer.DelivererFactoryDealer
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.not
 import org.hamcrest.Matchers.nullValue
